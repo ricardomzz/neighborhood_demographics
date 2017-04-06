@@ -10,9 +10,17 @@
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <script src="js/vendor/knockout-3.4.2.js"></script>
 
+
   </head>
   <body>
+    <div id="main">
+    <ul data-bind="foreach: locationList">
+      <li data-bind="text: name"></li>
+    </ul>
+    </div>
+
     <div id="map"></div>
+    <script src="js/app.js"></script>
     <script>
       var map;
       function initMap() {
@@ -25,9 +33,12 @@
           position: belem,
           map: map
         });
+
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClTU_jWFwhY_NrHxvPVu1UE7Jaze6zYNc&callback=initMap"
     async defer></script>
+
+
   </body>
 </html>
