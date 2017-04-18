@@ -27,14 +27,21 @@
         var belem={lat: -1.455833, lng: -48.503889}
         map = new google.maps.Map(document.getElementById('map'), {
           center: belem,
-          zoom: 8
+          zoom: 12
         });
+
+
+      markers.forEach(function (pos) {
+        console.log(pos);
         var marker = new google.maps.Marker({
-          position: belem,
+          position: pos,
           map: map
         });
 
-      }
+      })
+
+
+    }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClTU_jWFwhY_NrHxvPVu1UE7Jaze6zYNc&callback=initMap"
     async defer></script>

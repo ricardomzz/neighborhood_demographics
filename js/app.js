@@ -42,14 +42,17 @@ var Location=function(data){
   this.lng = data.lng;
 }
 
-
+var markers=[]
 var ViewModel = function(){
   var self=this;
-  
+
 
   this.locationList = ko.observableArray([])
+  this.markers = []
   initial_locations.forEach(function(locationItem){
-    self.locationList.push(new Location(locationItem))
+    self.locationList.push(new Location(locationItem)),
+    markers.push({lat:locationItem.lat,lng:locationItem.lng})
+
   })
 }
 
