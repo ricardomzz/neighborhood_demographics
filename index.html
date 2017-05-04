@@ -13,38 +13,25 @@
 
   </head>
   <body>
+
     <div id="main">
-    <ul data-bind="foreach: locationList">
-      <li data-bind="text: name"></li>
+      <form data-bind="submit: filterList">
+          <input type="text" name="keyword">
+          <button type="submit">Filter</button>
+      </form>
+    <ul data-bind="foreach: filteredLocationList">
+      <div data-bind="click: bounceMarker">
+        <li data-bind="text: name"></li>
+      </div>
+
     </ul>
     </div>
 
     <div id="map"></div>
-    <script src="js/app.js"></script>
-    <script>
-      var map;
-      function initMap() {
-        var belem={lat: -1.455833, lng: -48.503889}
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: belem,
-          zoom: 12
-        });
 
-
-      markers.forEach(function (pos) {
-        console.log(pos);
-        var marker = new google.maps.Marker({
-          position: pos,
-          map: map
-        });
-
-      })
-
-
-    }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClTU_jWFwhY_NrHxvPVu1UE7Jaze6zYNc&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClTU_jWFwhY_NrHxvPVu1UE7Jaze6zYNc&callback=initApp"
     async defer></script>
+    <script src="js/app.js"></script>
 
 
   </body>
