@@ -34,21 +34,38 @@ function AppViewModel() {
 
 
 
-
+//Initial Setup:
   self.filter = ko.observable("");
   self.locationList = ko.observableArray([]);
 
   self.filteredLocationList = ko.computed(function(){
     return ko.utils.arrayFilter(
       self.locationList(),function(location){
-        return location().name.toUpperCase().includes(self.filter().toUpperCase())
+        return location().name.toUpperCase().
+        includes(self.filter().toUpperCase())
       }
     )
   }
 
   );
 
-//return location.name.toUpperCase().includes(self.filter().toUpperCase())
+  self.refreshMap = function (){
+    self.locationList().forEach(function (location) {
+      location().marker.setMap(null)
+    });
+    self.filteredLocationList().forEach(function (location) {
+      location().marker.setMap(map)
+    });
+
+  }
+
+  self.filterList = function (formElement){
+    self.filter(formElement.keyword.value);
+    self.refreshMap();
+
+  };
+
+//Location Constructor:
   self.initialLocations.forEach(function(location){
     self.locationList.push(ko.observable({
       name:location.name,
@@ -57,26 +74,27 @@ function AppViewModel() {
       marker:new google.maps.Marker({position:{lat:location.lat,lng:location.lng},map:map}),
       infoWindow: new google.maps.InfoWindow({content: location.name}),
       turnOffMarker: function(){this.marker.setMap(null)},
-      bounceMarker: function(){
-
+      showDemographics: function(){
         marker=this.marker
 
-        //close all infowidows
+        //close all infowindows
         self.locationList().forEach(function(location){location().infoWindow.close()})
-        //open infowindow for selected marker
 
+        //animate marker
         marker.setAnimation(google.maps.Animation.BOUNCE);
         turnOffAnimation=function(){marker.setAnimation(null)}
         setTimeout(turnOffAnimation,700);
         setWindowContent=this.infoWindow.setContent
 
+        //populate infoWindow with demographics from API
         function getDemographics(location) {
           $.getJSON(
             "https://www.broadbandmap.gov/broadbandmap/demographic/2014/"+
             "coordinates?latitude="+location.lat+"&longitude="+
             location.lng+"&format=json", function(json) {
             console.log(json.Results);
-            content="<h4>Area Demographics:</h4>"+
+            content="<h2>"+location.name+"</h2>"+
+                    "<h4>Area Demographics:</h4>"+
                     "<p>Education: High School Graduate: " +
                     json.Results.educationHighSchoolGraduate.toFixed(1)+"%</p>"+
                     "<p>Education: Bachelor's Degree or Greater: " +
@@ -100,12 +118,13 @@ function AppViewModel() {
 
 
 
-           }).fail(function(jqXHR, textStatus, errorThrown) { content="<p>Failed to Retrieve Demographics Information</p>"; })
+           }).fail(function(jqXHR, textStatus, errorThrown) { content=
+             "<p>Failed to Retrieve Demographics Information</p>"; })
            .always(function() { location.infoWindow.setContent(content) });;
         }
-
         getDemographics(this)
 
+        //open infoWindow
         this.infoWindow.open(map,marker)
 
         }
@@ -113,21 +132,8 @@ function AppViewModel() {
     }))
 
   });
-  self.refreshMap = function (){
-    self.locationList().forEach(function (location) {
-      location().marker.setMap(null)
-    });
-    self.filteredLocationList().forEach(function (location) {
-      location().marker.setMap(map)
-    });
 
-  }
 
-  self.filterList = function (formElement){
-    self.filter(formElement.keyword.value);
-    self.refreshMap();
-
-  };
 }
 
 

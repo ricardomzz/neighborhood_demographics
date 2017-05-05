@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Map</title>
+    <title>Demographics Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/normalize.min.css">
@@ -18,12 +18,13 @@
     <div class="container-fluid">
       <div class="row">
         <div id="main" class="col-md-3">
+          <h1>Neighborhood Demographics</h1>
           <form data-bind="submit: filterList">
               <input type="text" name="keyword">
               <button type="submit">Filter</button>
           </form>
         <ul data-bind="foreach: filteredLocationList">
-          <div data-bind="click: bounceMarker">
+          <div data-bind="click: showDemographics">
             <li data-bind="text: name"></li>
           </div>
 
