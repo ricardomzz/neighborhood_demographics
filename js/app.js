@@ -35,29 +35,29 @@ function AppViewModel() {
 
 
 //Initial Setup:
-  self.filter = ko.observable("");
+  self.filter = ko.observable('');
   self.locationList = ko.observableArray([]);
 
   self.filteredLocationList = ko.computed(function(){
     return ko.utils.arrayFilter(
       self.locationList(),function(location){
         return location().name.toUpperCase().
-        includes(self.filter().toUpperCase())
+        includes(self.filter().toUpperCase());
       }
-    )
+    );
   }
 
   );
 
   self.refreshMap = function (){
     self.locationList().forEach(function (location) {
-      location().marker.setMap(null)
+      location().marker.setVisible(false);
     });
     self.filteredLocationList().forEach(function (location) {
-      location().marker.setMap(map)
+      location().marker.setVisible(true);
     });
 
-  }
+  };
 
   self.filterList = function (formElement){
     self.filter(formElement.keyword.value);
@@ -74,19 +74,19 @@ function AppViewModel() {
       marker:new google.maps.Marker(
         {position:{lat:location.lat,lng:location.lng},map:map}),
       infoWindow: new google.maps.InfoWindow({content: location.name}),
-      turnOffMarker: function(){this.marker.setMap(null)},
+      turnOffMarker: function(){this.marker.setMap(null);},
       showDemographics: function(){
-        marker=this.marker
+        marker=this.marker;
 
         //close all infowindows
         self.locationList().forEach(function(location){location()
-          .infoWindow.close()})
+          .infoWindow.close();});
 
         //animate marker
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        turnOffAnimation=function(){marker.setAnimation(null)}
+        turnOffAnimation=function(){marker.setAnimation(null);};
         setTimeout(turnOffAnimation,700);
-        setWindowContent=this.infoWindow.setContent
+        setWindowContent=this.infoWindow.setContent;
 
         //populate infoWindow with demographics from API
         function getDemographics(location) {
@@ -116,7 +116,7 @@ function AppViewModel() {
                     "<p>Income greated than $200,000: " +
                     json.Results.incomeGreater200.toFixed(1)+"%</p>"+
                     "<p>Median Income: $" +
-                    json.Results.medianIncome.toFixed(1)+"</p>"
+                    json.Results.medianIncome.toFixed(1)+"</p>";
 
 
 
@@ -124,22 +124,30 @@ function AppViewModel() {
              "<p>Failed to Retrieve Demographics Information</p>"; })
            .always(function() {
              location.infoWindow.setContent(content);
-             location.infoWindow.open(map,marker) });;
+             location.infoWindow.open(map,marker);});
         }
-        getDemographics(this)
+        getDemographics(this);
 
         }
 
-    }))
+    }));
 
   });
 
+  self.locationList().forEach(function(location){
+    location().marker.addListener('click',function(event){
+      location().showDemographics();
+    });
+  });
 
 }
 
+function googleMapsError(){
+  alert('error loading google maps api');
+}
 
 function initApp() {
-  var astoria={lat: 40.7644, lng: -73.9235}
+  var astoria={lat: 40.7644, lng: -73.9235};
   map = new google.maps.Map(document.getElementById('map'), {
     center: astoria,
     mapTypeId: 'terrain',
