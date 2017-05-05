@@ -122,12 +122,11 @@ function AppViewModel() {
 
            }).fail(function(jqXHR, textStatus, errorThrown) { content=
              "<p>Failed to Retrieve Demographics Information</p>"; })
-           .always(function() { location.infoWindow.setContent(content) });;
+           .always(function() {
+             location.infoWindow.setContent(content);
+             location.infoWindow.open(map,marker) });;
         }
         getDemographics(this)
-
-        //open infoWindow
-        this.infoWindow.open(map,marker)
 
         }
 
