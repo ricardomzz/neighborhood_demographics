@@ -71,14 +71,16 @@ function AppViewModel() {
       name:location.name,
       lat:location.lat,
       lng:location.lng,
-      marker:new google.maps.Marker({position:{lat:location.lat,lng:location.lng},map:map}),
+      marker:new google.maps.Marker(
+        {position:{lat:location.lat,lng:location.lng},map:map}),
       infoWindow: new google.maps.InfoWindow({content: location.name}),
       turnOffMarker: function(){this.marker.setMap(null)},
       showDemographics: function(){
         marker=this.marker
 
         //close all infowindows
-        self.locationList().forEach(function(location){location().infoWindow.close()})
+        self.locationList().forEach(function(location){location()
+          .infoWindow.close()})
 
         //animate marker
         marker.setAnimation(google.maps.Animation.BOUNCE);
