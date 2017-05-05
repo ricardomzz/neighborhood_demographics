@@ -1,15 +1,16 @@
-html, body {
+html, body, .container-fluid,.row {
   height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 #map {
  height: 100%;
 }
 
-#main {
-  width:20%;
-  height: 80%;
-  float: left;
+#main{
+  padding:20px;
+}
+
+#main > ul {
+  padding: 20px;
+  list-style: none;
 }
